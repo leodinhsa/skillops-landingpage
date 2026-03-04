@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "home": "Home",
+    "docs": "Documentation",
+    "about": "About",
+    "language": "Language"
+  },
+  "hero": {
+    "title": "Manage AI Agent Skills",
+    "subtitle": "Like a Pro",
+    "description": "SkillOps is a lightweight, high-performance Go CLI utility designed to manage AI agent skills using a symlink-first approach. Pull skills from repositories and enable them across multiple Agentic IDEs without file duplication.",
+    "getStarted": "Get Started",
+    "viewDocs": "View Documentation",
+    "downloadCli": "Download CLI"
+  },
+  "features": {
+    "title": "Why Choose SkillOps?",
+    "subtitle": "Built for developers who value efficiency and simplicity",
+    "symlink": {
+      "title": "Symlink Management",
+      "description": "Skills are stored centrally and symlinked to project folders. No file duplication, just smart linking."
+    },
+    "multiIde": {
+      "title": "Multi-IDE Support",
+      "description": "Manage skills across Claude, Windsurf, OpenCode, and other Agentic IDEs from a single interface."
+    },
+    "interactive": {
+      "title": "Rich TUI Experience",
+      "description": "Premium interactive terminal interface with colored output and intuitive navigation."
+    },
+    "safety": {
+      "title": "Safety First",
+      "description": "Protected against accidental deletions with smart path validation and confirmation prompts."
+    },
+    "flexible": {
+      "title": "Flexible Configuration",
+      "description": "Consolidated configuration in ~/.skillops/config/agentics.yaml for easy management."
+    },
+    "performance": {
+      "title": "High Performance",
+      "description": "Built with Go for lightning-fast operations and minimal resource usage."
+    }
+  },
+  "demo": {
+    "title": "See SkillOps in Action",
+    "subtitle": "Experience the power of centralized skill management"
+  },
+  "installation": {
+    "title": "Quick Installation",
+    "subtitle": "Get up and running in seconds",
+    "step1": "Download the latest release",
+    "step2": "Make it executable",
+    "step3": "Start managing skills"
+  },
+  "cta": {
+    "title": "Ready to Streamline Your Workflow?",
+    "subtitle": "Join developers who are already using SkillOps to manage their AI agent skills efficiently.",
+    "getStarted": "Get Started Now",
+    "viewGithub": "View on GitHub"
+  },
+  "footer": {
+    "description": "SkillOps - Simplifying AI agent skill management for developers worldwide.",
+    "links": "Quick Links",
+    "community": "Community",
+    "support": "Support",
+    "madeWith": "Made with ❤️ for the developer community",
+    "donate": "Support Development"
+  }
+}

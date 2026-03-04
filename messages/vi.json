@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "docs": "Tài liệu",
+    "about": "Giới thiệu",
+    "language": "Ngôn ngữ"
+  },
+  "hero": {
+    "title": "Quản lý AI Agent Skills",
+    "subtitle": "Như một chuyên gia",
+    "description": "SkillOps là một tiện ích CLI Go nhẹ, hiệu suất cao được thiết kế để quản lý các kỹ năng AI agent bằng cách tiếp cận symlink-first. Kéo skills từ repositories và kích hoạt chúng trên nhiều Agentic IDE mà không cần sao chép file.",
+    "getStarted": "Bắt đầu",
+    "viewDocs": "Xem tài liệu",
+    "downloadCli": "Tải CLI"
+  },
+  "features": {
+    "title": "Tại sao chọn SkillOps?",
+    "subtitle": "Được xây dựng cho các developer coi trọng hiệu quả và đơn giản",
+    "symlink": {
+      "title": "Quản lý Symlink",
+      "description": "Skills được lưu trữ tập trung và symlink đến các thư mục dự án. Không sao chép file, chỉ liên kết thông minh."
+    },
+    "multiIde": {
+      "title": "Hỗ trợ đa IDE",
+      "description": "Quản lý skills trên Claude, Windsurf, OpenCode và các Agentic IDE khác từ một giao diện duy nhất."
+    },
+    "interactive": {
+      "title": "Trải nghiệm TUI phong phú",
+      "description": "Giao diện terminal tương tác cao cấp với đầu ra màu sắc và điều hướng trực quan."
+    },
+    "safety": {
+      "title": "An toàn trước tiên",
+      "description": "Được bảo vệ khỏi việc xóa nhầm với xác thực đường dẫn thông minh và lời nhắc xác nhận."
+    },
+    "flexible": {
+      "title": "Cấu hình linh hoạt",
+      "description": "Cấu hình tập trung trong ~/.skillops/config/agentics.yaml để quản lý dễ dàng."
+    },
+    "performance": {
+      "title": "Hiệu suất cao",
+      "description": "Được xây dựng bằng Go cho các hoạt động cực nhanh và sử dụng tài nguyên tối thiểu."
+    }
+  },
+  "demo": {
+    "title": "Xem SkillOps hoạt động",
+    "subtitle": "Trải nghiệm sức mạnh của quản lý skill tập trung"
+  },
+  "installation": {
+    "title": "Cài đặt nhanh",
+    "subtitle": "Khởi động và chạy trong vài giây",
+    "step1": "Tải phiên bản mới nhất",
+    "step2": "Làm cho nó có thể thực thi",
+    "step3": "Bắt đầu quản lý skills"
+  },
+  "cta": {
+    "title": "Sẵn sàng tối ưu hóa quy trình làm việc?",
+    "subtitle": "Tham gia cùng các developer đã sử dụng SkillOps để quản lý AI agent skills một cách hiệu quả.",
+    "getStarted": "Bắt đầu ngay",
+    "viewGithub": "Xem trên GitHub"
+  },
+  "footer": {
+    "description": "SkillOps - Đơn giản hóa việc quản lý AI agent skill cho các developer trên toàn thế giới.",
+    "links": "Liên kết nhanh",
+    "community": "Cộng đồng",
+    "support": "Hỗ trợ",
+    "madeWith": "Được tạo với ❤️ cho cộng đồng developer",
+    "donate": "Hỗ trợ phát triển"
+  }
+}
