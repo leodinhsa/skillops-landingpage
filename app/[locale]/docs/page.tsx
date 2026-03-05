@@ -17,6 +17,13 @@ interface DocsPageProps {
 
 const docSections = [
   {
+    title: 'Overview',
+    description: 'Introduction to SkillOps and core concepts',
+    icon: BookOpen,
+    href: '#overview',
+    file: 'overview.md'
+  },
+  {
     title: 'Installation',
     description: 'Get SkillOps up and running on your system',
     icon: BookOpen,
@@ -36,6 +43,13 @@ const docSections = [
     icon: Settings,
     href: '#configuration',
     file: 'configuration.md'
+  },
+  {
+    title: 'Workflows',
+    description: 'Real-world workflow examples and use cases',
+    icon: BookOpen,
+    href: '#workflows',
+    file: 'workflows.md'
   },
   {
     title: 'Troubleshooting',
@@ -59,11 +73,15 @@ async function getDocContent(locale: string, filename: string) {
 export default async function DocsPage({ params }: DocsPageProps) {
   const { locale } = params
   
-  // Get installation content as the main content
+  // Get all documentation content
+  const overviewContent = await getDocContent(locale, 'overview.md')
   const installationContent = await getDocContent(locale, 'installation.md')
   const commandsContent = await getDocContent(locale, 'commands.md')
+  const configurationContent = await getDocContent(locale, 'configuration.md')
+  const workflowsContent = await getDocContent(locale, 'workflows.md')
+  const troubleshootingContent = await getDocContent(locale, 'troubleshooting.md')
 
-  if (!installationContent) {
+  if (!overviewContent) {
     notFound()
   }
 
@@ -88,7 +106,7 @@ export default async function DocsPage({ params }: DocsPageProps) {
       {/* Navigation Cards */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             {docSections.map((section) => {
               const Icon = section.icon
               return (
@@ -98,7 +116,7 @@ export default async function DocsPage({ params }: DocsPageProps) {
                   className="group bg-white rounded-xl p-6 border border-gray-200 hover:border-primary-300 hover:shadow-lg transition-all duration-200"
                 >
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-accent-500 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-primary-400 rounded-lg flex items-center justify-center">
                       <Icon className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
@@ -118,71 +136,141 @@ export default async function DocsPage({ params }: DocsPageProps) {
       {/* Documentation Content */}
       <section className="pb-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Installation Section */}
-          <div id="installation" className="mb-16">
-            <div className="prose prose-lg max-w-none">
-              <ReactMarkdown
-                components={{
-                  code({ className, children, ...props }: any) {
-                    const match = /language-(\w+)/.exec(className || '')
-                    const isInline = !match
-                    return !isInline && match ? (
-                      <SyntaxHighlighter
-                        style={oneDark}
-                        language={match[1]}
-                        PreTag="div"
-                        className="rounded-lg"
-                        {...props}
-                      >
-                        {String(children).replace(/\n$/, '')}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code className="bg-gray-100 px-2 py-1 rounded text-sm" {...props}>
+          {/* Overview Section */}
+          {overviewContent && (
+            <div id="overview" className="mb-16">
+              <div className="prose prose-lg max-w-none">
+                <ReactMarkdown
+                  components={{
+                    code({ className, children, ...props }: any) {
+                      const match = /language-(\w+)/.exec(className || '')
+                      const isInline = !match
+                      return !isInline && match ? (
+                        <SyntaxHighlighter
+                          style={oneDark}
+                          language={match[1]}
+                          PreTag="div"
+                          className="rounded-lg"
+                          {...props}
+                        >
+                          {String(children).replace(/\n$/, '')}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code className="bg-gray-100 px-2 py-1 rounded text-sm" {...props}>
+                          {children}
+                        </code>
+                      )
+                    },
+                    h1: ({ children }) => (
+                      <h1 className="text-3xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
                         {children}
-                      </code>
-                    )
-                  },
-                  h1: ({ children }) => (
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
-                      {children}
-                    </h1>
-                  ),
-                  h2: ({ children }) => (
-                    <h2 className="text-2xl font-semibold text-gray-900 mt-12 mb-4">
-                      {children}
-                    </h2>
-                  ),
-                  h3: ({ children }) => (
-                    <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
-                      {children}
-                    </h3>
-                  ),
-                  p: ({ children }) => (
-                    <p className="text-gray-700 leading-relaxed mb-4">
-                      {children}
-                    </p>
-                  ),
-                  ul: ({ children }) => (
-                    <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
-                      {children}
-                    </ul>
-                  ),
-                  ol: ({ children }) => (
-                    <ol className="list-decimal list-inside text-gray-700 mb-4 space-y-1">
-                      {children}
-                    </ol>
-                  ),
-                  blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-primary-500 pl-4 py-2 bg-primary-50 rounded-r-lg mb-4">
-                      {children}
-                    </blockquote>
-                  ),
-                }}
-              >
-                {installationContent}
-              </ReactMarkdown>
+                      </h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="text-2xl font-semibold text-gray-900 mt-12 mb-4">
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
+                        {children}
+                      </h3>
+                    ),
+                    p: ({ children }) => (
+                      <p className="text-gray-700 leading-relaxed mb-4">
+                        {children}
+                      </p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="list-decimal list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ol>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="border-l-4 border-primary-500 pl-4 py-2 bg-primary-50 rounded-r-lg mb-4">
+                        {children}
+                      </blockquote>
+                    ),
+                  }}
+                >
+                  {overviewContent}
+                </ReactMarkdown>
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Installation Section */}
+          {installationContent && (
+            <div id="installation" className="mb-16">
+              <div className="prose prose-lg max-w-none">
+                <ReactMarkdown
+                  components={{
+                    code({ className, children, ...props }: any) {
+                      const match = /language-(\w+)/.exec(className || '')
+                      const isInline = !match
+                      return !isInline && match ? (
+                        <SyntaxHighlighter
+                          style={oneDark}
+                          language={match[1]}
+                          PreTag="div"
+                          className="rounded-lg"
+                          {...props}
+                        >
+                          {String(children).replace(/\n$/, '')}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code className="bg-gray-100 px-2 py-1 rounded text-sm" {...props}>
+                          {children}
+                        </code>
+                      )
+                    },
+                    h1: ({ children }) => (
+                      <h1 className="text-3xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
+                        {children}
+                      </h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="text-2xl font-semibold text-gray-900 mt-12 mb-4">
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
+                        {children}
+                      </h3>
+                    ),
+                    p: ({ children }) => (
+                      <p className="text-gray-700 leading-relaxed mb-4">
+                        {children}
+                      </p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="list-decimal list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ol>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="border-l-4 border-primary-500 pl-4 py-2 bg-primary-50 rounded-r-lg mb-4">
+                        {children}
+                      </blockquote>
+                    ),
+                  }}
+                >
+                  {installationContent}
+                </ReactMarkdown>
+              </div>
+            </div>
+          )}
 
           {/* Commands Section */}
           {commandsContent && (
@@ -247,6 +335,210 @@ export default async function DocsPage({ params }: DocsPageProps) {
                   }}
                 >
                   {commandsContent}
+                </ReactMarkdown>
+              </div>
+            </div>
+          )}
+
+          {/* Configuration Section */}
+          {configurationContent && (
+            <div id="configuration" className="mb-16">
+              <div className="prose prose-lg max-w-none">
+                <ReactMarkdown
+                  components={{
+                    code({ className, children, ...props }: any) {
+                      const match = /language-(\w+)/.exec(className || '')
+                      const isInline = !match
+                      return !isInline && match ? (
+                        <SyntaxHighlighter
+                          style={oneDark}
+                          language={match[1]}
+                          PreTag="div"
+                          className="rounded-lg"
+                          {...props}
+                        >
+                          {String(children).replace(/\n$/, '')}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code className="bg-gray-100 px-2 py-1 rounded text-sm" {...props}>
+                          {children}
+                        </code>
+                      )
+                    },
+                    h1: ({ children }) => (
+                      <h1 className="text-3xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
+                        {children}
+                      </h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="text-2xl font-semibold text-gray-900 mt-12 mb-4">
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
+                        {children}
+                      </h3>
+                    ),
+                    p: ({ children }) => (
+                      <p className="text-gray-700 leading-relaxed mb-4">
+                        {children}
+                      </p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="list-decimal list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ol>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="border-l-4 border-primary-500 pl-4 py-2 bg-primary-50 rounded-r-lg mb-4">
+                        {children}
+                      </blockquote>
+                    ),
+                  }}
+                >
+                  {configurationContent}
+                </ReactMarkdown>
+              </div>
+            </div>
+          )}
+
+          {/* Workflows Section */}
+          {workflowsContent && (
+            <div id="workflows" className="mb-16">
+              <div className="prose prose-lg max-w-none">
+                <ReactMarkdown
+                  components={{
+                    code({ className, children, ...props }: any) {
+                      const match = /language-(\w+)/.exec(className || '')
+                      const isInline = !match
+                      return !isInline && match ? (
+                        <SyntaxHighlighter
+                          style={oneDark}
+                          language={match[1]}
+                          PreTag="div"
+                          className="rounded-lg"
+                          {...props}
+                        >
+                          {String(children).replace(/\n$/, '')}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code className="bg-gray-100 px-2 py-1 rounded text-sm" {...props}>
+                          {children}
+                        </code>
+                      )
+                    },
+                    h1: ({ children }) => (
+                      <h1 className="text-3xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
+                        {children}
+                      </h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="text-2xl font-semibold text-gray-900 mt-12 mb-4">
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
+                        {children}
+                      </h3>
+                    ),
+                    p: ({ children }) => (
+                      <p className="text-gray-700 leading-relaxed mb-4">
+                        {children}
+                      </p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="list-decimal list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ol>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="border-l-4 border-primary-500 pl-4 py-2 bg-primary-50 rounded-r-lg mb-4">
+                        {children}
+                      </blockquote>
+                    ),
+                  }}
+                >
+                  {workflowsContent}
+                </ReactMarkdown>
+              </div>
+            </div>
+          )}
+
+          {/* Troubleshooting Section */}
+          {troubleshootingContent && (
+            <div id="troubleshooting" className="mb-16">
+              <div className="prose prose-lg max-w-none">
+                <ReactMarkdown
+                  components={{
+                    code({ className, children, ...props }: any) {
+                      const match = /language-(\w+)/.exec(className || '')
+                      const isInline = !match
+                      return !isInline && match ? (
+                        <SyntaxHighlighter
+                          style={oneDark}
+                          language={match[1]}
+                          PreTag="div"
+                          className="rounded-lg"
+                          {...props}
+                        >
+                          {String(children).replace(/\n$/, '')}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code className="bg-gray-100 px-2 py-1 rounded text-sm" {...props}>
+                          {children}
+                        </code>
+                      )
+                    },
+                    h1: ({ children }) => (
+                      <h1 className="text-3xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
+                        {children}
+                      </h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="text-2xl font-semibold text-gray-900 mt-12 mb-4">
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
+                        {children}
+                      </h3>
+                    ),
+                    p: ({ children }) => (
+                      <p className="text-gray-700 leading-relaxed mb-4">
+                        {children}
+                      </p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="list-decimal list-inside text-gray-700 mb-4 space-y-1">
+                        {children}
+                      </ol>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="border-l-4 border-primary-500 pl-4 py-2 bg-primary-50 rounded-r-lg mb-4">
+                        {children}
+                      </blockquote>
+                    ),
+                  }}
+                >
+                  {troubleshootingContent}
                 </ReactMarkdown>
               </div>
             </div>

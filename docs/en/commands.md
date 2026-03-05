@@ -4,6 +4,8 @@
 
 SkillOps provides a comprehensive set of commands for managing AI agent skills across multiple Agentic IDEs (Claude, Antigravity, OpenCode, etc.). All commands follow a consistent pattern and provide rich interactive terminal experiences.
 
+## Skill Management
+
 ## Project Configuration
 
 ### `skillops agentic`
@@ -76,22 +78,28 @@ skillops agentic remove-skills windsurf
 Download a new skill repository from GitHub.
 
 ```bash
-# Pull a skill from GitHub
-skillops pull https://github.com/github/copilot-docs
+# Pull entire repository
+skillops pull https://github.com/user/my-agent-skills
 
-# Pull using short format
-skillops pull github.com/user/awesome-skill
+# Pull a specific skill (saves space)
+skillops pull https://github.com/user/my-agent-skills --skill logger
 ```
 
 **Supported URL formats:**
 - `https://github.com/user/repo`
 - `github.com/user/repo`
-- `git@github.com:user/repo.git`
+- `git@github.com:user/repo.git` (if SSH key is configured)
 
-**Example with real repository:**
+**Options:**
+- `--skill <name>`: Download only a specific skill instead of the entire repository
+
+**Examples:**
 ```bash
-# Pull GitHub Copilot documentation skills
-skillops pull https://github.com/github/copilot-docs
+# Pull entire repository
+skillops pull https://github.com/leodinhsa/awesome-skills
+
+# Pull only 'git-helper' skill
+skillops pull https://github.com/leodinhsa/awesome-skills --skill git-helper
 ```
 
 ### `skillops list`
@@ -102,13 +110,11 @@ Show all downloaded skill names and their status across IDEs.
 skillops list
 ```
 
-**Example output:**
-```
-Available Skills:
-  • copilot-docs (active in claude, windsurf)
-  • logger-skill (inactive)
-  • debug-helper (active in claude)
-```
+**Features:**
+- Interactive TUI (Terminal User Interface)
+- Browse repository and skill lists
+- Quick copy skill names to clipboard using `Space` key
+- View active status of each skill
 
 **Status indicators:**
 - Active: Skill is symlinked to one or more IDEs
@@ -138,6 +144,23 @@ skillops remove-all
 ```
 
 **Warning:** This will remove all downloaded skills from `~/.skillops/skills/` directory.
+
+### `skillops update`
+
+Synchronize your skills with the latest versions from remote repositories.
+
+```bash
+# Update all skills
+skillops update
+
+# Update a specific skill
+skillops update --skill logger
+```
+
+**Features:**
+- Automatically checks for updates from GitHub
+- Batch or individual skill updates
+- Preserves existing symlink configurations
 
 ## Agentic Configuration
 

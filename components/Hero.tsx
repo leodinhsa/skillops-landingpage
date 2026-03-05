@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Download, BookOpen, Github } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 
 export default function Hero() {
   const t = useTranslations('hero')
@@ -27,6 +28,23 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
           className="space-y-8"
         >
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+            className="flex justify-center"
+          >
+            <Image 
+              src="/logo.png" 
+              alt="SkillOps Logo" 
+              width={120} 
+              height={120}
+              className="w-24 h-24 md:w-32 md:h-32"
+              priority
+            />
+          </motion.div>
+
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}

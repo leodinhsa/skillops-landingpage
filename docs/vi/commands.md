@@ -4,6 +4,8 @@
 
 SkillOps cung cấp một bộ lệnh toàn diện để quản lý AI agent skills trên nhiều Agentic IDE (Claude, Antigravity, OpenCode, v.v.). Tất cả các lệnh đều tuân theo một mẫu nhất quán và cung cấp trải nghiệm terminal tương tác phong phú.
 
+## Quản lý Skills
+
 ## Cấu hình Dự án
 
 ### `skillops agentic`
@@ -76,22 +78,28 @@ skillops agentic remove-skills windsurf
 Tải xuống một skill repository mới từ GitHub.
 
 ```bash
-# Kéo một skill từ GitHub
-skillops pull https://github.com/github/copilot-docs
+# Kéo toàn bộ repository
+skillops pull https://github.com/user/my-agent-skills
 
-# Kéo sử dụng định dạng ngắn
-skillops pull github.com/user/awesome-skill
+# Kéo một skill cụ thể (Tiết kiệm dung lượng)
+skillops pull https://github.com/user/my-agent-skills --skill logger
 ```
 
 **Định dạng URL được hỗ trợ:**
 - `https://github.com/user/repo`
 - `github.com/user/repo`
-- `git@github.com:user/repo.git`
+- `git@github.com:user/repo.git` (nếu đã cấu hình SSH key)
 
-**Ví dụ với repository thực:**
+**Tùy chọn:**
+- `--skill <name>`: Chỉ tải một skill cụ thể thay vì toàn bộ repository
+
+**Ví dụ:**
 ```bash
-# Kéo GitHub Copilot documentation skills
-skillops pull https://github.com/github/copilot-docs
+# Kéo toàn bộ repository
+skillops pull https://github.com/leodinhsa/awesome-skills
+
+# Chỉ kéo skill 'git-helper'
+skillops pull https://github.com/leodinhsa/awesome-skills --skill git-helper
 ```
 
 ### `skillops list`
@@ -102,13 +110,11 @@ Hiển thị tất cả tên skills đã tải xuống và trạng thái của c
 skillops list
 ```
 
-**Ví dụ đầu ra:**
-```
-Available Skills:
-  • copilot-docs (active in claude, windsurf)
-  • logger-skill (inactive)
-  • debug-helper (active in claude)
-```
+**Tính năng:**
+- Giao diện TUI (Terminal User Interface) trực quan
+- Duyệt danh sách repository và skill
+- Sao chép nhanh tên skill vào clipboard bằng phím `Space`
+- Xem trạng thái hoạt động của từng skill
 
 **Chỉ báo trạng thái:**
 - Active: Skill được symlink đến một hoặc nhiều IDE
@@ -138,6 +144,23 @@ skillops remove-all
 ```
 
 **Cảnh báo:** Điều này sẽ xóa tất cả skills đã tải xuống từ thư mục `~/.skillops/skills/`.
+
+### `skillops update`
+
+Đồng bộ hóa các skill của bạn với phiên bản mới nhất từ remote repository.
+
+```bash
+# Cập nhật tất cả skills
+skillops update
+
+# Cập nhật một skill cụ thể
+skillops update --skill logger
+```
+
+**Tính năng:**
+- Tự động kiểm tra cập nhật từ GitHub
+- Cập nhật hàng loạt hoặc từng skill
+- Giữ nguyên cấu hình symlink hiện tại
 
 ## Cấu hình Agentic
 

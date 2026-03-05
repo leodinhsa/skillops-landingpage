@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { Github, Twitter, Heart, Coffee } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 
 export default function Footer() {
   const t = useTranslations('footer')
@@ -36,9 +37,13 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <Link href={`/${currentLocale}`} className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-400 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">S</span>
-              </div>
+              <Image 
+                src="/logo.png" 
+                alt="SkillOps Logo" 
+                width={32} 
+                height={32}
+                className="w-8 h-8"
+              />
               <span className="text-xl font-bold gradient-text">SkillOps</span>
             </Link>
             <p className="text-gray-400 mb-6 leading-relaxed">
