@@ -1,139 +1,149 @@
-# 🛠️ SkillOps: Hướng Dẫn Sử Dụng Chi Tiết
+# SkillOps: Hướng Dẫn Sử Dụng
 
-SkillOps là một công cụ CLI mạnh mẽ, hiệu năng cao được phát triển bằng ngôn ngữ Go, giúp bạn quản lý các "skills" (khả năng/script hỗ trợ AI) cho các Agentic IDE khác nhau (như Claude Desktop, Antigravity, OpenCode, Vercel, v.v.) thông qua cơ chế **symlink-first**.
+SkillOps là CLI tool viết bằng Go giúp quản lý các "skills" (script/capability hỗ trợ AI) cho nhiều Agentic IDE (Claude Code, Kiro, Cursor, Windsurf, v.v.) thông qua cơ chế **symlink**.
 
-Thay vì phải sao chép thủ công các skill vào từng thư mục của IDE, SkillOps lưu trữ chúng tập trung và tạo các liên kết (symlink) một cách thông minh, giúp đồng bộ hóa dễ dàng.
+Thay vì sao chép thủ công skill vào từng thư mục IDE, SkillOps lưu trữ tập trung tại `~/.skillops/skills/` và tạo symlink vào đúng vị trí trong dự án.
 
 ---
 
-## 🚀 1. Cài đặt (Installation)
+## Cài đặt
 
-### Sử dụng Homebrew (macOS & Linux)
+### Homebrew (macOS & Linux)
 ```bash
 brew tap leodinhsa/skillops
 brew install skillops
 ```
 
-### Cài đặt thủ công (Từ mã nguồn)
-Yêu cầu bạn đã cài đặt Go (phiên bản 1.25 trở lên).
+### Từ mã nguồn (yêu cầu Go 1.25+)
 ```bash
-go build -o skillops main.go
+go build -o skillops .
 mv skillops /usr/local/bin/
 ```
 
 ---
 
-## 📁 2. Khái niệm Cốt lõi (Core Concepts)
+## Khái niệm cốt lõi
 
-- **Global Skills Directory**: Thư mục trung tâm (`~/.skillops/skills`) nơi lưu trữ tất cả các repository chứa skill bạn tải về.
-- **Agentic IDE**: Các trình soạn thảo hoặc môi trường chạy Agent (Claude, Antigravity, v.v.).
-- **Symlinking**: SkillOps sẽ tạo link từ thư mục global vào thư mục dự án của bạn (ví dụ: `.agents/skills`).
+- **Skill**: Thư mục chứa file `SKILL.md`, được nhận diện theo định dạng `repo_name/skill_name` (ví dụ: `my-repo/logger`).
+- **Agentic**: IDE/môi trường agent với đường dẫn skill riêng (ví dụ: `kiro` → `.kiro/skills`).
+- **Global store**: `~/.skillops/skills/` — nơi lưu tất cả repo skill đã pull về.
+- **Local config**: `.skillops/config.json` trong thư mục dự án — nguồn sự thật cho project, nên commit vào git.
 
 ---
 
-## ⚙️ 3. Quản lý Skills (Skill Management)
+## Quy trình làm việc cơ bản
 
-### Tải Skill từ GitHub (`pull`)
-Bạn có thể tải toàn bộ repository hoặc chỉ một skill cụ thể.
+### 1. Khai báo IDE cho dự án (`init`)
+Chạy ở thư mục gốc của dự án để chọn các IDE muốn hỗ trợ:
+```bash
+skillops init
+```
+TUI hiện ra danh sách IDE. Dùng `Space` để chọn/bỏ chọn, `Enter` để xác nhận. SkillOps sẽ tạo thư mục tương ứng và cập nhật `.skillops/config.json`.
 
-- **Tải toàn bộ repo:**
-  ```bash
-  skillops pull https://github.com/user/my-agent-skills
-  ```
+### 2. Pull skill từ GitHub (`pull`)
+```bash
+# Pull toàn bộ repo
+skillops pull https://github.com/user/my-skills
 
-- **Tải một skill cụ thể (Tiết kiệm dung lượng):**
-  ```bash
-  skillops pull https://github.com/user/my-agent-skills --skill logger
-  ```
-  > [!TIP]
-  > SkillOps hỗ trợ cả URL HTTPS và SSH (nếu bạn đã cấu hình SSH key).
+# Pull một skill cụ thể (tiết kiệm dung lượng)
+skillops pull https://github.com/user/my-skills --skill logger
+```
 
-### Xem danh sách skills đã tải (`list`)
-Giao diện TUI (Terminal User Interface) giúp bạn duyệt danh sách repo và skill một cách trực quan.
+### 3. Gắn skill vào IDE (`add`)
+```bash
+# TUI tương tác — chọn skill và IDE
+skillops add
+
+# Gắn skill cụ thể vào tất cả IDE đang active
+skillops add logger --all
+
+# Gắn vào một hoặc nhiều IDE cụ thể
+skillops add logger --tool kiro
+skillops add logger --tool kiro,claude-code
+```
+Có thể truyền tên ngắn (`logger`) hoặc full identity (`my-repo/logger`).
+
+### 4. Xem trạng thái dự án (`status`)
+```bash
+skillops status
+```
+Hiển thị tất cả IDE đang active, skill nào đã được link (◉) và chưa được link (○).
+
+### 5. Khôi phục symlink (`sync`)
+Dùng khi clone dự án về máy mới hoặc symlink bị mất:
+```bash
+skillops sync
+```
+Đọc `.skillops/config.json` và tạo lại toàn bộ symlink. Nếu skill chưa có trong global store và đã cấu hình registry, sẽ tự động pull về.
+
+---
+
+## Quản lý skill
+
+### Xem danh sách skill đã pull (`list`)
 ```bash
 skillops list
 ```
-*Dùng phím `Space` để sao chép nhanh tên skill vào clipboard.*
+Giao diện TUI duyệt danh sách repo và skill. Dùng `Space` để copy tên skill vào clipboard.
 
-### Cập nhật Skills (`update`)
-Đồng bộ hóa các skill của bạn với phiên bản mới nhất từ remote repository.
+### Cập nhật skill (`update`)
 ```bash
-skillops update          # Cập nhật tất cả
-skillops update --skill logger  # Cập nhật riêng skill 'logger'
+# Cập nhật tất cả
+skillops update
+
+# Cập nhật một skill cụ thể
+skillops update --skill logger
+```
+
+### Gỡ skill khỏi IDE (`remove`)
+```bash
+# TUI tương tác
+skillops remove
+
+# Gỡ khỏi tất cả IDE
+skillops remove logger --all
+
+# Gỡ khỏi IDE cụ thể
+skillops remove logger --tool kiro
 ```
 
 ---
 
-## 🏗️ 4. Quản lý Dự án (Project Configuration)
+## Cấu hình toàn cục (`config`)
 
-### Kích hoạt Agentic cho dự án (`agentic`)
-Khi bạn đang ở thư mục gốc (root) của dự án, hãy chạy lệnh này để chọn các IDE bạn muốn hỗ trợ.
+Cấu hình lưu tại `~/.skillops/config/agentics.yaml` — ánh xạ tên IDE sang đường dẫn thư mục skill tương đối.
+
 ```bash
-skillops agentic
-```
-- Sử dụng phím `Space` để chọn (Check/Uncheck).
-- Phím `Enter` để áp dụng. SkillOps sẽ tự động tạo thư mục tương ứng (ví dụ: `.agents/`, `.agent/`).
-
-### Quản lý Skill cho từng Agent (`agentic manage`)
-Sau khi đã kích hoạt agentic, bạn có thể chọn chính xác skill nào sẽ được link vào IDE đó.
-```bash
-skillops agentic manage antigravity
-```
-- Giao diện TUI hiện ra, liệt kê tất cả skills có sẵn.
-- Chọn skill bạn muốn -> `Enter`. Link sẽ được tạo ngay lập tức.
-
-### Xóa Skill khỏi Agent (`agentic remove-skill`)
-Nếu không muốn dùng một skill cụ thể cho một agent:
-```bash
-skillops agentic remove-skill antigravity logger
-```
-
----
-
-## 🔧 5. Cấu hình Toàn cục (Global Config)
-
-Tất cả cấu hình được lưu tại: `~/.skillops/config/agentics.yaml`.
-
-Bạn có thể thêm mới hoặc cập nhật đường dẫn mặc định của các IDE:
-```bash
-# Thêm một IDE mới
-skillops config add-agentic -n my-cool-ide -p .cool-ide/skills
+# Thêm IDE mới
+skillops config add-agentic -n my-ide -p .my-ide/skills
 
 # Cập nhật đường dẫn
-skillops config update-agentic -n claude-code
+skillops config update-agentic -n my-ide -p .new-path/skills
+
+# Xóa IDE
+skillops config remove-agentic -n my-ide
 ```
 
 ---
 
-## 🛠️ 6. Ví dụ Quy trình làm việc (Workflows)
+## Xem phiên bản
 
-### Trường hợp: Setup dự án mới hỗ trợ Claude và Antigravity
-
-1. **Khởi tạo môi trường:**
-   ```bash
-   cd my-new-project
-   skillops agentic
-   # (Chọn 'claude' và 'antigravity' trong danh sách)
-   ```
-
-2. **Tải skill cần thiết:**
-   ```bash
-   skillops pull https://github.com/leodinhsa/awesome-skills --skill git-helper
-   ```
-
-3. **Gắn skill vào IDE:**
-   ```bash
-   skillops agentic manage claude
-   # (Chọn 'git-helper' -> Enter)
-   ```
+```bash
+skillops version
+```
 
 ---
 
-## ❓ 7. Xử lý sự cố (Troubleshooting)
+## Xử lý sự cố
 
-- **Lỗi "open /dev/tty":** SkillOps sử dụng TUI tương tác, do đó cần chạy trong một terminal thực sự (không chạy được trong các môi trường non-interactive như CI đơn giản).
-- **Symlink bị hỏng:** Nếu bạn xóa thủ công thư mục trong `~/.skillops/skills`, hãy dùng lệnh `skillops agentic manage` để refresh lại các link.
+**Lỗi "No local config found"**: Chạy `skillops init` trước, sau đó `skillops sync` để khôi phục link.
+
+**Lỗi "open /dev/tty"**: SkillOps dùng TUI tương tác, cần chạy trong terminal thực (không chạy được trong môi trường non-interactive như CI).
+
+**Symlink bị hỏng**: Chạy `skillops sync` để tạo lại, hoặc `skillops add` để gắn lại từng skill.
+
+**Conflict tên skill**: Nếu hai repo có skill cùng tên ngắn, SkillOps sẽ cảnh báo và bỏ qua — không ghi đè thầm lặng.
 
 ---
 
-*Tài liệu được cập nhật dựa trên phiên bản v0.2.0-dev*
+*Cập nhật theo phiên bản hiện tại của codebase.*
